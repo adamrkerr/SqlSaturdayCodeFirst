@@ -2,8 +2,16 @@
 
 namespace SqlSaturdayCodeFirst.Context
 {
+    /*
+     * To Run, in package manager console
+     * > dotnet ef //to ensure that ef cli is installed
+     * > cd .\SqlSaturdayCodeFirst
+     * > dotnet ef migrations add [migration name here] -s ..\SqlSaturdayCodeFirst.Tests\SqlSaturdayCodeFirst.Tests.csproj -v --context UniversityDbContext
+     */
     internal partial class UniversityDbContext : DbContext
     {
+        public UniversityDbContext(DbContextOptions<UniversityDbContext> options) : base(options){ }
+
         public DbSet<Course> Courses { get; set; }
 
         public DbSet<Instructor> Instructors { get; set; }
