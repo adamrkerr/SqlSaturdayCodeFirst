@@ -5,11 +5,8 @@ using System.Text;
 
 namespace SqlSaturdayCodeFirst.Contracts
 {
-    internal abstract class AuditableEntity<T> : IIdentified<T>
+    internal abstract class AuditableEntity
     {
-        [Required]
-        public T Id { get; set; }
-
         [Required]
         public DateTimeOffset? LastChangedTimestamp { get; set; }
 
@@ -17,6 +14,12 @@ namespace SqlSaturdayCodeFirst.Contracts
         public string LastChangedByUser { get; set; }
 
         public bool IsDeleted { get; set; }
+
+    }
+    internal abstract class AuditableEntity<T> : AuditableEntity, IIdentified<T>
+    {
+        [Required]
+        public T Id { get; set; }
 
     }
 }

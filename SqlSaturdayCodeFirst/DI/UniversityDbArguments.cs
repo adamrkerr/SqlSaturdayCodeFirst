@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SqlSaturdayCodeFirst.ServiceCollection
+namespace SqlSaturdayCodeFirst.DI
 {
     public class UniversityDbArguments
     {

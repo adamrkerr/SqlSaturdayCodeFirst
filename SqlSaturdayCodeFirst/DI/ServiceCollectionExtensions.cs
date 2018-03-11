@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SqlSaturdayCodeFirst.ServiceCollection
+namespace SqlSaturdayCodeFirst.DI
 {
     public static class ServiceCollectionExtensions
     {

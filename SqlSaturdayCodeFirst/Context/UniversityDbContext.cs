@@ -1,4 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using SqlSaturdayCodeFirst.Contracts;
 
 namespace SqlSaturdayCodeFirst.Context
 {
@@ -10,7 +16,7 @@ namespace SqlSaturdayCodeFirst.Context
      */
     internal partial class UniversityDbContext : DbContext
     {
-        public UniversityDbContext(DbContextOptions<UniversityDbContext> options) : base(options){ }
+        public UniversityDbContext(DbContextOptions<UniversityDbContext> options) : base(options) { }
 
         public DbSet<Course> Courses { get; set; }
 
@@ -45,8 +51,80 @@ namespace SqlSaturdayCodeFirst.Context
             modelBuilder.Entity<CourseEnrollment>()
                 .Property(m => m.FinalGrade)
                 .HasColumnType("decimal(6,3)");
-            
+
+            ApplyCommonStructure(modelBuilder);
+
         }
 
+        private void ApplyCommonStructure(ModelBuilder modelBuilder)
+        {
+            var calculationBaseType = typeof(AuditableEntity);
+
+
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                if (!calculationBaseType.IsAssignableFrom(entityType.ClrType))
+                {
+                    continue;
+                }
+
+                modelBuilder.Entity(entityType.Name)
+                    .HasIndex(nameof(AuditableEntity.IsDeleted));
+
+                LambdaExpression filterExpression = GetNotDeletedFilter(entityType);
+
+                modelBuilder.Entity(entityType.Name)
+                    .HasQueryFilter(filterExpression);
+            }
+        }
+
+        /// <summary>
+        /// Creates a type specific expression that equates to "t => !t.IsDeleted;"
+        /// </summary>
+        /// <param name="entityType"></param>
+        /// <returns></returns>
+        private static LambdaExpression GetNotDeletedFilter(IMutableEntityType entityType)
+        {
+            var parameter = Expression.Parameter(entityType.ClrType);
+
+            var isDeletedProperty = Expression.Property(parameter, nameof(AuditableEntity.IsDeleted));
+
+            var negation = Expression.Not(isDeletedProperty);
+
+            var filterExpression = Expression.Lambda(negation, parameter);
+            return filterExpression;
+        }
+
+        public override int SaveChanges()
+        {
+            InspectChangesAndApplyAudits();
+
+            return base.SaveChanges();
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            InspectChangesAndApplyAudits();
+
+            return await base.SaveChangesAsync();
+        }
+
+        private void InspectChangesAndApplyAudits()
+        {
+            foreach (var change in ChangeTracker.Entries())
+            {
+                if (!(change.Entity is AuditableEntity))
+                    continue;
+
+                if (change.State == EntityState.Added
+                    || change.State == EntityState.Modified)
+                {
+                    var entity = change.Entity as AuditableEntity;
+
+                    entity.LastChangedByUser = "test";
+                    entity.LastChangedTimestamp = DateTimeOffset.UtcNow;
+                }
+            }
+        }
     }
 }
