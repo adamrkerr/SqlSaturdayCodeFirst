@@ -17,7 +17,7 @@ namespace SqlSaturdayCodeFirst.Context
         [Required]
         public Guid CourseId { get; set; }
 
-        public float FinalGrade { get; set; }
+        public Decimal FinalGrade { get; set; }
 
         public Student Student { get; set; }
 

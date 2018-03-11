@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SqlSaturdayCodeFirst.Context;
+using SqlSaturdayCodeFirst.Mapping;
+using SqlSaturdayCodeFirst.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,8 +21,16 @@ namespace SqlSaturdayCodeFirst.DI
             serviceCollection.AddDbContext<UniversityDbContext>(options => options
             .UseSqlServer(arguments.ConnectionString));
 
+            serviceCollection.AddDbContext<UniversityDbContextReadonly>(options => options
+            .UseSqlServer(arguments.ConnectionString));
+
             //register arguments so we can get them in UseUniversityDb()
             serviceCollection.AddSingleton(arguments);
+
+            serviceCollection.AddTransient<Profile, MappingProfile>();
+
+            serviceCollection.AddScoped<ICourseRepository, CourseRepository>();
+            serviceCollection.AddScoped<ICourseChangeHandler, CourseChangeHandler>();
 
             return serviceCollection;
         }
@@ -34,11 +45,12 @@ namespace SqlSaturdayCodeFirst.DI
                 {
                     var context = scope.ServiceProvider.GetService<UniversityDbContext>();
                     context.Database.Migrate();
-                    //context.EnsureSeedData();
+                    context.EnsureSeedData().Wait();
                 }
             }
 
             return app;
         }
+        
     }
 }

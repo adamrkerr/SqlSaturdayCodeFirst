@@ -3,8 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.EntityFrameworkCore.Storage.Internal;
 using SqlSaturdayCodeFirst.Context;
 using System;
 
@@ -96,8 +94,7 @@ namespace SqlSaturdayCodeFirst.Migrations
 
             modelBuilder.Entity("SqlSaturdayCodeFirst.Context.Department", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("Id");
 
                     b.Property<string>("Code")
                         .IsRequired();

@@ -13,9 +13,6 @@ namespace SqlSaturdayCodeFirst.Context
         }
 
         [Required]
-        public int? DepartmentId { get; set; }
-
-        [Required]
         public int? CourseNumber { get; set; }
 
         [Required]
@@ -32,6 +29,9 @@ namespace SqlSaturdayCodeFirst.Context
         public Guid? InstructorId { get; set; } //if you name it <Class>Id, it automatically becomes a foreign key
 
         public Instructor Instructor { get; set; }
+
+        [Required]
+        public int? DepartmentId { get; set; }
 
         public Department Department { get; set; }
 

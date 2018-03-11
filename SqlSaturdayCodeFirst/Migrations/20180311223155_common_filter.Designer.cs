@@ -11,8 +11,8 @@ using System;
 namespace SqlSaturdayCodeFirst.Migrations
 {
     [DbContext(typeof(UniversityDbContext))]
-    [Migration("20180311052744_filter")]
-    partial class filter
+    [Migration("20180311223155_common_filter")]
+    partial class common_filter
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -97,8 +97,7 @@ namespace SqlSaturdayCodeFirst.Migrations
 
             modelBuilder.Entity("SqlSaturdayCodeFirst.Context.Department", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("Id");
 
                     b.Property<string>("Code")
                         .IsRequired();

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SqlSaturdayCodeFirst.Migrations
 {
-    public partial class filter : Migration
+    public partial class common_filter : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

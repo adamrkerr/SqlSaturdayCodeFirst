@@ -18,6 +18,8 @@ namespace SqlSaturdayCodeFirst.Context
     {
         public UniversityDbContext(DbContextOptions<UniversityDbContext> options) : base(options) { }
 
+        protected UniversityDbContext(DbContextOptions options) : base(options) { }
+
         public DbSet<Course> Courses { get; set; }
 
         public DbSet<Instructor> Instructors { get; set; }
@@ -51,6 +53,10 @@ namespace SqlSaturdayCodeFirst.Context
             modelBuilder.Entity<CourseEnrollment>()
                 .Property(m => m.FinalGrade)
                 .HasColumnType("decimal(6,3)");
+
+            modelBuilder.Entity<Department>()
+                .Property(d => d.Id)
+                .ValueGeneratedNever();
 
             ApplyCommonStructure(modelBuilder);
 

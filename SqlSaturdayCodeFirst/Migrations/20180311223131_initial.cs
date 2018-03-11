@@ -1,11 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Collections.Generic;
 
 namespace SqlSaturdayCodeFirst.Migrations
 {
-    public partial class intial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,8 +12,7 @@ namespace SqlSaturdayCodeFirst.Migrations
                 name: "Departments",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<int>(nullable: false),
                     Code = table.Column<string>(nullable: false),
                     Description = table.Column<string>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),

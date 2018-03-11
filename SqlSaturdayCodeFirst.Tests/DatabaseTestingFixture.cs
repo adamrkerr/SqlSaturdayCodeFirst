@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
 using SqlSaturdayCodeFirst.Context;
 using SqlSaturdayCodeFirst.DI;
+using AutoMapper;
 
 namespace SqlSaturdayCodeFirst.Tests
 {
@@ -45,7 +46,7 @@ namespace SqlSaturdayCodeFirst.Tests
 
             var args = new UniversityDbArguments
             {
-                ConnectionString = $"Server=(localdb)\\mssqllocaldb;Database={nameof(T)}_University;Trusted_Connection=True;MultipleActiveResultSets=true",
+                ConnectionString = $"Server=(localdb)\\mssqllocaldb;Database={typeof(T)}_University;Trusted_Connection=True;MultipleActiveResultSets=true",
                 CreateDbIfNotFound = true
             };
 
@@ -60,6 +61,17 @@ namespace SqlSaturdayCodeFirst.Tests
             context.Database.EnsureDeleted();
 
             app.ApplicationServices = ServiceProvider;
+            
+            //set up automapper
+            var mapperProfiles = ServiceProvider.GetServices<Profile>();
+
+            Mapper.Initialize(cfg =>
+            {
+                foreach(var profile in mapperProfiles)
+                {
+                    cfg.AddProfile(profile);
+                }
+            });
             
             app.UseUniversityDb();
         }
