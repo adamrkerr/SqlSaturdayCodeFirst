@@ -62,6 +62,8 @@ namespace SqlSaturdayCodeFirst.Tests
 
             app.ApplicationServices = ServiceProvider;
             
+            app.UseUniversityDb();
+
             //set up automapper
             var mapperProfiles = ServiceProvider.GetServices<Profile>();
 
@@ -73,7 +75,6 @@ namespace SqlSaturdayCodeFirst.Tests
                 }
             });
             
-            app.UseUniversityDb();
         }
 
         public void Dispose()
